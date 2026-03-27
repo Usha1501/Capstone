@@ -1,30 +1,29 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../services/auth.service';
 import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-root',
-  templateUrl: './app.component.html',
-  styleUrls: ['./app.component.scss']
+  templateUrl: './app.component.html'
 })
-export class AppComponent {
-  IsLoggin:any=false;
-  roleName: string | null;
-  constructor(private authService: AuthService, private router:Router)
-  {
-   
-    this.IsLoggin=authService.getLoginStatus;
-    this.roleName=authService.getRole;
-    if(this.IsLoggin==false)
-    {
-      this.router.navigateByUrl('/login'); 
+export class AppComponent implements OnInit {
+  title = 'Event Management System';
+  IsLoggin: boolean = false;
+  roleName: string | null = '';
+
+  constructor(public authService: AuthService, private router: Router) {
+    this.IsLoggin = this.authService.getLoginStatus();
+    this.roleName = this.authService.getRole();
     
+    if (!this.IsLoggin) {
+      this.router.navigate(['/login']);
     }
   }
-  logout()
-{
-  this.authService.logout();
-  window.location.reload();
-}
 
+  ngOnInit() {}
+
+  logout() {
+    this.authService.logout();
+    window.location.reload(); // Required by the document
+  }
 }
